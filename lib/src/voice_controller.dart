@@ -37,11 +37,12 @@ class VoiceController extends MyTicker {
   final Function() onPlaying;
   final Function() onPause;
   final Function(Object)? onError;
-  final double noiseWidth = 50.5.w();
+  late double noiseWidth;
   late AnimationController animController;
   final AudioPlayer _player = AudioPlayer();
   final bool isFile;
   final String? cacheKey;
+  final double noiseElementWidth;
   PlayStatus playStatus = PlayStatus.init;
   PlaySpeed speed = PlaySpeed.x1;
   ValueNotifier updater = ValueNotifier(null);
@@ -90,7 +91,10 @@ class VoiceController extends MyTicker {
     this.onError,
     this.randoms,
     this.cacheKey,
+    this.noiseElementWidth = .56
   }) {
+    noiseWidth = ((noiseElementWidth * noiseCount)+10).w();
+
     if (randoms?.isEmpty ?? true) _setRandoms();
     animController = AnimationController(
       vsync: this,

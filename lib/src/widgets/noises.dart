@@ -10,6 +10,7 @@ class Noises extends StatelessWidget {
     super.key,
     required this.rList,
     required this.activeSliderColor,
+    required this.noiseWidth,
   });
 
   /// A list of noises value.
@@ -17,6 +18,8 @@ class Noises extends StatelessWidget {
 
   /// The color of the active slider.
   final Color activeSliderColor;
+
+  final double noiseWidth;
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +30,8 @@ class Noises extends StatelessWidget {
           .map(
             (e) => SingleNoise(
               activeSliderColor: activeSliderColor,
-              height: e,
+              height: e, width: noiseWidth,
+
             ),
           )
           .toList(),

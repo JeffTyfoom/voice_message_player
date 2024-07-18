@@ -116,7 +116,7 @@ class VoiceMessageView extends StatelessWidget {
     );
 
     return Container(
-      width: 160 + (controller.noiseCount * .72.w()),
+     // width: 200 + (controller.noiseCount * .72.w()),
       padding: EdgeInsets.all(innerPadding),
       decoration: BoxDecoration(
         color: backgroundColor,
@@ -146,16 +146,14 @@ class VoiceMessageView extends StatelessWidget {
               const SizedBox(width: 10),
 
               /// slider & noises
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: 8),
-                    _noises(newTHeme),
-                    const SizedBox(height: 4),
-                    Text(controller.remindingTime, style: counterTextStyle),
-                  ],
-                ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 8),
+                  _noises(newTHeme),
+                  const SizedBox(height: 4),
+                  Text(controller.remindingTime, style: counterTextStyle),
+                ],
               ),
 
               ///
@@ -173,61 +171,65 @@ class VoiceMessageView extends StatelessWidget {
     );
   }
 
-  SizedBox _noises(ThemeData newTHeme) => SizedBox(
-        height: 30,
-        width: controller.noiseWidth,
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            /// noises
-            Noises(
-              rList: controller.randoms!,
-              activeSliderColor: activeSliderColor,
-            ),
+  SizedBox _noises(ThemeData newTHeme) {
+    return SizedBox(
+      height: 30,
+      width: controller.noiseWidth,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          /// noises
+          Noises(
+            rList: controller.randoms!,
+            activeSliderColor: activeSliderColor,
+            noiseWidth: controller.noiseElementWidth,
+          ),
 
-            /// slider
-            AnimatedBuilder(
-              animation: CurvedAnimation(
-                parent: controller.animController,
-                curve: Curves.ease,
-              ),
-              builder: (BuildContext context, Widget? child) {
-                return Positioned(
-                  left: controller.animController.value,
-                  child: Container(
-                    width: controller.noiseWidth,
-                    height: 6.w(),
-                    color:
-                        notActiveSliderColor ?? backgroundColor.withOpacity(.4),
-                  ),
-                );
-              },
+          /// slider
+          AnimatedBuilder(
+            animation: CurvedAnimation(
+              parent: controller.animController,
+              curve: Curves.ease,
             ),
-            Opacity(
-              opacity: 0,
-              child: Container(
-                width: controller.noiseWidth,
-                color: Colors.transparent.withOpacity(1),
-                child: Theme(
-                  data: newTHeme,
-                  child: Slider(
-                    value: controller.currentMillSeconds,
-                    max: controller.maxMillSeconds,
-                    onChangeStart: controller.onChangeSliderStart,
-                    onChanged: controller.onChanging,
-                    onChangeEnd: (value) {
-                      controller.onSeek(
-                        Duration(milliseconds: value.toInt()),
-                      );
-                      controller.play();
-                    },
-                  ),
+            builder: (BuildContext context, Widget? child) {
+              return Positioned(
+                left: controller.animController.value,
+                child: Container(
+                  width: controller.noiseWidth,
+                  height: 6.w(),
+                  color:
+                  notActiveSliderColor ?? backgroundColor.withOpacity(.4),
+                ),
+              );
+            },
+          ),
+          Opacity(
+            opacity:0,
+            child: Container(
+              width: controller.noiseWidth,
+              padding: const EdgeInsets.symmetric(horizontal: 4),
+              color: Colors.transparent.withOpacity(0),
+              child: Theme(
+                data: newTHeme,
+                child: Slider(
+                  value: controller.currentMillSeconds,
+                  max: controller.maxMillSeconds,
+                  onChangeStart: controller.onChangeSliderStart,
+                  onChanged: controller.onChanging,
+                  onChangeEnd: (value) {
+                    controller.onSeek(
+                      Duration(milliseconds: value.toInt()),
+                    );
+                    controller.play();
+                  },
                 ),
               ),
             ),
-          ],
-        ),
-      );
+          ),
+        ],
+      ),
+    );
+  }
 
   Transform _changeSpeedButton(Color color) => Transform.translate(
         offset: const Offset(0, -7),
