@@ -114,7 +114,21 @@ class VoiceController extends MyTicker {
 
   Future play() async {
     if(kIsWeb){
-      startPlayingWeb(audioSrc);
+      playStatus = PlayStatus.downloading;
+      _updateUi();
+
+      try{
+        await startPlayingWeb(audioSrc);
+        playStatus = PlayStatus.playing;
+      }catch(e){
+        if(kDebugMode){
+          print('Error playing audio from web ${e.toString()}');
+        }
+
+        playStatus = PlayStatus.downloadError;
+      }
+
+      _updateUi();
       return;
     }
 
